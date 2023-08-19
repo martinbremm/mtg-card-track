@@ -31,7 +31,7 @@ app.layout = dbc.Container(
         ),  # empty by default
         # Showing which line of the df was selected
         dbc.Alert(id="tbl-out"),
-        html.Img(id="card-image", alt="image"),
+        html.Div(id="image-container", children=html.Img(id="card-image", alt="image")),
         html.Div(id="graph-container", children=dcc.Graph(id="price-graph")),
     ]
 )
@@ -61,7 +61,11 @@ def update_df(data):
     )
 
 
-@callback(Output("tbl-out", "children"), Input("tbl", "active_cell"))
+@callback(
+    Output("tbl-out", "children"),
+    Input("tbl", "active_cell"),
+    prevent_initial_call=True,
+)
 def update_selection(active_cell):
     return str(active_cell) if active_cell else "Click the table"
 
@@ -104,9 +108,10 @@ def update_graph(data, active_cell):
 
 
 @callback(
-    Output("card-image", "src"),
+    Output("image-container", "children"),
     Input("current-data", "data"),
     Input("tbl", "active_cell"),
+    prevent_initial_call=True,
 )
 def show_cardimage(data, active_cell):
     if not data or not active_cell:
@@ -120,7 +125,7 @@ def show_cardimage(data, active_cell):
 
     img = get_card_image(single_card["name"], single_card["setCode"])["small"]
 
-    return img
+    return html.Img(src=img)
 
 
 if __name__ == "__main__":
