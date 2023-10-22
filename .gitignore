@@ -48,5 +48,8 @@ venv.bak/
 # VSCode
 .vscode/
 
+# pyenv
+.python-version
+
 # Data
 data/
